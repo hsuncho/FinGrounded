@@ -1,0 +1,4 @@
+requests>=2.31
+psycopg2-binary>=2.9
+python-dotenv>=1.0
+pgvector>=0.2      # Day2 임베딩 적재에 사용
