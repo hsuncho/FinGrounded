@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS macro_series (
     PRIMARY KEY (series_id, obs_date)
 );
 
--- Day2 이후 사용: RAG용 문서/청크 (스키마만 미리 선반영)
+-- RAG용 문서/청크 (스키마만 미리 선반영)
 CREATE TABLE IF NOT EXISTS documents (
     doc_id      TEXT PRIMARY KEY,
     source_type TEXT,             -- dart_fs / dart_pdf / fred ...

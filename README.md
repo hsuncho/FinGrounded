@@ -1,6 +1,6 @@
 # FinGrounded
 
-DART(공시·재무) + FRED(거시경제)를 수집·정규화하여 PostgreSQL에 적재하는 단계.
+DART(공시·재무) + FRED(거시경제)를 수집·정규화하여 PostgreSQL에 적재
 
 ## 1. 사전 준비
 - OpenDART 인증키: https://opendart.fss.or.kr
@@ -44,8 +44,27 @@ WHERE series_id='FEDFUNDS' ORDER BY obs_date DESC LIMIT 5;
 - `companies` — 대상 기업(고유번호/종목코드/산업)
 - `financial_facts` — 계정 단위 정형 재무 데이터. `sj_div`로 BS/IS/CF 구분, `source_url`에 출처 API 링크
 - `macro_series` — FRED 시계열
-- `documents`/`document_chunks` — Day2(멀티모달 파싱·임베딩)에서 채움. pgvector 컬럼 포함
+- `documents`/`document_chunks` — (멀티모달 파싱·임베딩)에서 채움. pgvector 컬럼 포함
 
-## 다음 단계
-- 사업보고서 PDF·XLSX 파싱 → `documents`/`document_chunks` 적재
-- 임베딩 인덱싱 → 출처 달린 RAG 답변
+## 멀티모달 파싱 + RAG 검색
+
+정형 재무데이터로부터 요약 사실문서를 생성하고(항상 동작), `data/docs/`에 넣은
+PDF·XLSX도 파싱하여 KURE-v1로 임베딩·인덱싱한 뒤 출처 달린 검색을 제공한다.
+
+```bash
+python ingest_docs.py                      # 사실문서 + data/docs/ 파일 → 청킹·임베딩·적재
+python demo_retrieve.py                    # 검색 데모(질의 → top-k 청크 + 출처)
+```
+
+- 멀티모달 확장: `data/docs/`에 DART에서 받은 사업보고서 PDF나 재무 XLSX를
+  넣고 `ingest_docs.py`를 다시 실행하면 자동으로 파싱·인덱싱된다.
+- 임베딩 모델 교체: `embeddings.Embedder(model_name="BAAI/bge-m3")` 처럼 바꾸면
+  된다(둘 다 1024차원).
+
+### 검색 인덱스
+```sql
+CREATE INDEX ON document_chunks USING hnsw (embedding vector_cosine_ops);
+```
+
+- 재무비율 계산 도구 + 도구호출 Agent, 구조화 JSON 출력
+- 골든 테스트셋 + 평가 러너 + pytest 회귀 게이트

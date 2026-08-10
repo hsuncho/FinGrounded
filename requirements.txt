@@ -1,4 +1,8 @@
 requests>=2.31
 psycopg2-binary>=2.9
 python-dotenv>=1.0
-pgvector>=0.2      # Day2 임베딩 적재에 사용
+pgvector>=0.2      # 임베딩 적재에 사용
+sentence-transformers>=3.0   # KURE-v1 로딩
+pymupdf>=1.24                # PDF 파싱
+openpyxl>=3.1                # XLSX 파싱
+numpy>=1.26
