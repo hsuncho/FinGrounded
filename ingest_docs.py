@@ -31,7 +31,7 @@ def build_fact_documents(conn) -> list[tuple[dict, list[dict]]]:
     """정형 재무데이터 → 회사·연도별 요약 사실문서(세그먼트=재무제표 구분)."""
     placeholders = ", ".join(["%s"] * len(KEY_ACCOUNTS))
     sql = f"""
-        SELECT c.corp_code, c.corp_name, f.bsns_year, f.sj_div,
+        SELECT c.corp_code, c.corp_name, c.industry, f.bsns_year, f.sj_div,
                f.account_nm, f.amount, f.source_url
         FROM financial_facts f
         JOIN companies c USING (corp_code)
@@ -45,19 +45,20 @@ def build_fact_documents(conn) -> list[tuple[dict, list[dict]]]:
         rows = cur.fetchall()
 
     grouped: dict[tuple, dict] = {}
-    for corp_code, corp_name, year, sj_div, acct, amount, url in rows:
-        g = grouped.setdefault((corp_code, corp_name, year), {"url": url, "segs": {}})
+    for corp_code, corp_name, industry, year, sj_div, acct, amount, url in rows:
+        g = grouped.setdefault((corp_code, corp_name, year), {"url": url, "industry": industry, "segs": {}})
         g["segs"].setdefault(sj_div, []).append(f"{acct}: {amount / 1_000_000:,.0f}백만원")
 
     bundles = []
     for (corp_code, corp_name, year), g in grouped.items():
+        industry = g["industry"] or ""
         segments = []
         for sj_div, lines in g["segs"].items():
             sj_name = SJ_NAMES.get(sj_div, sj_div)
             text = (
-                f"{corp_name} {year}년 연결 {sj_name} (단위: 백만원)\n"
-                + "; ".join(lines)
-            )
+                    f"{corp_name}({industry} 산업) {year}년 연결 {sj_name} (단위: 백만원)\n"
+                    + "; ".join(lines)
+                )
             segments.append({"locator": sj_name, "text": text})
         doc = {
             "doc_id": f"fact:{corp_code}:{year}",

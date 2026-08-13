@@ -12,7 +12,10 @@ class Embedder:
     def __init__(self, model_name: str = "nlpai-lab/KURE-v1"):
         self.model_name = model_name
         self.model = SentenceTransformer(model_name)
-        self.dim = self.model.get_sentence_embedding_dimension()
+        try:
+            self.dim = self.model.get_embedding_dimension()
+        except AttributeError:   # 구버전 호환
+            self.dim = self.model.get_sentence_embedding_dimension()
 
     def encode(self, texts: list[str]):
         """정규화된 임베딩(numpy)을 반환. cosine 검색(<=>)과 짝을 이룬다."""
