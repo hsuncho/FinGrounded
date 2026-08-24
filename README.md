@@ -68,3 +68,23 @@ CREATE INDEX ON document_chunks USING hnsw (embedding vector_cosine_ops);
 
 - 재무비율 계산 도구 + 도구호출 Agent, 구조화 JSON 출력
 - 골든 테스트셋 + 평가 러너 + pytest 회귀 게이트
+
+## 도구호출 Agent + 구조화 출력
+
+RAG·계산 도구를 붙여, 질문을 분석해 도구를 호출하고 출처 달린 구조화 JSON으로 답한다.
+
+```bash
+python demo_agent.py     # 수치형·비교형·거부형 질문 실행
+```
+
+### 도구 구성
+- `calculate_financial_ratio(company, year, ratio)` — 부채비율/유동비율/ROE/영업이익률/순이익률을
+  DB 정형데이터로 **결정적 계산**(숫자 환각 차단). 계정명 흔들림은 별칭으로 흡수.
+- `compare_by_industry(industry, metric, year)` — 산업 필터로 동종업계를 **전부** 계산·정렬
+  (RAG 랭킹 쏠림 문제를 구조로 회피).
+- `search_knowledge_base(query, k)` — 서술형 근거 RAG 검색.
+
+### 핵심 설계
+- **출처는 LLM이 아니라 시스템이 채운다**: 실제 실행된 도구 결과에서 sources를 수집해
+  최종 JSON에 주입 → 인용 환각을 구조적으로 차단.
+- 최종 출력: `{answer, confidence, caveats, sources[], tool_calls[]}`.
