@@ -1,0 +1,20 @@
+{"id": "num-samsung-2023-debt", "type": "numeric", "question": "삼성전자 2023년 부채비율은 얼마야?", "expect": {"company": "삼성전자", "year": "2023", "ratio": "부채비율", "tool": "calculate_financial_ratio"}}
+{"id": "num-samsung-2022-debt", "type": "numeric", "question": "삼성전자 2022년 부채비율 알려줘", "expect": {"company": "삼성전자", "year": "2022", "ratio": "부채비율", "tool": "calculate_financial_ratio"}}
+{"id": "num-samsung-2024-debt", "type": "numeric", "question": "삼성전자의 2024년 부채비율은?", "expect": {"company": "삼성전자", "year": "2024", "ratio": "부채비율", "tool": "calculate_financial_ratio"}}
+{"id": "num-skhynix-2023-debt", "type": "numeric", "question": "SK하이닉스 2023년 부채비율이 궁금해", "expect": {"company": "SK하이닉스", "year": "2023", "ratio": "부채비율", "tool": "calculate_financial_ratio"}}
+{"id": "num-naver-2023-debt", "type": "numeric", "question": "네이버 2023년 부채비율은?", "expect": {"company": "NAVER", "year": "2023", "ratio": "부채비율", "tool": "calculate_financial_ratio"}}
+{"id": "num-kakao-2023-debt", "type": "numeric", "question": "카카오 2023년 부채비율 계산해줘", "expect": {"company": "카카오", "year": "2023", "ratio": "부채비율", "tool": "calculate_financial_ratio"}}
+{"id": "num-hyundai-2023-debt", "type": "numeric", "question": "현대차 2023년 부채비율은 어때?", "expect": {"company": "현대차", "year": "2023", "ratio": "부채비율", "tool": "calculate_financial_ratio"}}
+{"id": "num-samsung-2023-opm", "type": "numeric", "question": "삼성전자 2023년 영업이익률은?", "expect": {"company": "삼성전자", "year": "2023", "ratio": "영업이익률", "tool": "calculate_financial_ratio"}}
+{"id": "cmp-semi-2023-debt", "type": "comparison", "question": "2023년 반도체 기업들의 부채비율을 비교해줘", "expect": {"industry": "반도체", "metric": "부채비율", "year": "2023", "tool": "compare_by_industry"}}
+{"id": "cmp-internet-2023-debt", "type": "comparison", "question": "2023년 인터넷 기업들 부채비율 비교", "expect": {"industry": "인터넷", "metric": "부채비율", "year": "2023", "tool": "compare_by_industry"}}
+{"id": "cmp-semi-2024-debt", "type": "comparison", "question": "2024년 반도체 회사들 부채비율은 서로 어떻게 달라?", "expect": {"industry": "반도체", "metric": "부채비율", "year": "2024", "tool": "compare_by_industry"}}
+{"id": "refuse-samsung-2019", "type": "refusal", "question": "삼성전자 2019년 부채비율은?", "expect": {"company": "삼성전자", "year": "2019", "ratio": "부채비율"}}
+{"id": "refuse-skhynix-2018", "type": "refusal", "question": "SK하이닉스 2018년 부채비율 알려줘", "expect": {"company": "SK하이닉스", "year": "2018", "ratio": "부채비율"}}
+{"id": "refuse-unknown-company", "type": "refusal", "question": "롯데케미칼 2023년 부채비율은?", "expect": {"company": "롯데케미칼", "year": "2023", "ratio": "부채비율"}}
+{"id": "refuse-samsung-2030", "type": "refusal", "question": "삼성전자 2030년 부채비율은 얼마일까?", "expect": {"company": "삼성전자", "year": "2030", "ratio": "부채비율"}}
+{"id": "retr-samsung-2023-bs", "type": "retrieval", "question": "삼성전자 2023년 자산총계", "expect": {"title_contains": "삼성전자 2023", "k": 3}}
+{"id": "retr-kakao-cf", "type": "retrieval", "question": "카카오 영업활동현금흐름", "expect": {"title_contains": "카카오", "k": 3}}
+{"id": "retr-skhynix-2024-is", "type": "retrieval", "question": "SK하이닉스 2024년 영업이익", "expect": {"title_contains": "SK하이닉스 2024", "k": 3}}
+{"id": "retr-hyundai-2022", "type": "retrieval", "question": "현대차 2022년 부채총계", "expect": {"title_contains": "현대차 2022", "k": 3}}
+{"id": "retr-naver-2023-equity", "type": "retrieval", "question": "네이버 2023년 자본총계", "expect": {"title_contains": "NAVER 2023", "k": 3}}
