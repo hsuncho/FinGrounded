@@ -4,3 +4,5 @@ venv/
 logs/
 __pycache__/
 *.pyc
+.pytest_cache/
+evals/report.json
