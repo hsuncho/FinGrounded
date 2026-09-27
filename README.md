@@ -88,3 +88,28 @@ python demo_agent.py     # 수치형·비교형·거부형 질문 실행
 - **출처는 LLM이 아니라 시스템이 채운다**: 실제 실행된 도구 결과에서 sources를 수집해
   최종 JSON에 주입 → 인용 환각을 구조적으로 차단.
 - 최종 출력: `{answer, confidence, caveats, sources[], tool_calls[]}`.
+
+## 평가·회귀 하네스
+
+품질을 수치로 측정하고, 회귀를 테스트로 막는다. 정답(ground truth)은 하드코딩하지
+않고 도구로 그 자리에서 계산하므로, 데이터가 바뀌어도 골든셋을 고칠 필요가 없다.
+
+### 구성
+- `evals/golden_set.jsonl` — 20문항(수치 8·비교 3·거부 4·검색 5)
+- `evals/evaluators.py` — 순수 스코어러(숫자추출·수치일치·거부판정·근거성). 단위 테스트 대상
+- `evals/run_eval.py` — Agent로 전 문항 실행 → 지표 채점 → `report.json` 저장
+- `evals/compare_embeddings.py` — KURE vs BGE-m3 Hit@k 비교
+- `tests/test_evaluators.py` — 단위 테스트
+- `tests/test_regression.py` — 지표가 임계값 아래로 떨어지면 실패하는 회귀 게이트
+
+### 지표
+검색 Hit@k · 수치정답률 · 근거성(출처 존재) · 도구선택 정확도 · 거부 정확도 · 비교 정확도.
+
+### 실행
+```bash
+pip install -r requirements.txt
+python -m evals.run_eval           # 전체 평가 → report.json + 지표 요약
+python -m evals.compare_embeddings # KURE vs BGE-m3 Hit@k
+pytest tests/test_evaluators.py    # 단위 테스트
+pytest tests/test_regression.py    # 회귀 게이트
+```
