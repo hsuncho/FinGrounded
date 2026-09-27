@@ -1,0 +1,16 @@
+name: ci
+on: [push, pull_request]
+
+jobs:
+  unit-tests:
+    # 평가 스코어러 단위 테스트를 매 푸시마다 실행
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install pytest
+      - run: pytest tests/test_evaluators.py -q
+
+  # 통합 회귀 게이트(tests/test_regression.py)는 수동 워크플로에서 실행
