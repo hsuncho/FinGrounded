@@ -30,6 +30,10 @@ KEY_ACCOUNTS = (
 def build_fact_documents(conn) -> list[tuple[dict, list[dict]]]:
     """정형 재무데이터 → 회사·연도별 요약 사실문서(세그먼트=재무제표 구분)."""
     placeholders = ", ".join(["%s"] * len(KEY_ACCOUNTS))
+    # [SAST 예외 근거] f-string에 삽입되는 placeholders는 '%s, %s, ...' 마커일 뿐이며,
+    # 실제 값(KEY_ACCOUNTS)은 아래 execute(sql, KEY_ACCOUNTS)로 파라미터 바인딩된다.
+    # 외부 입력이 SQL 문자열에 직접 들어가지 않으므로 인젝션 위험 없음(SECURITY.md §1).
+    # nosemgrep: fingrounded-sql-string-formatting
     sql = f"""
         SELECT c.corp_code, c.corp_name, c.industry, f.bsns_year, f.sj_div,
                f.account_nm, f.amount, f.source_url

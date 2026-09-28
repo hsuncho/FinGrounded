@@ -1,0 +1,42 @@
+rules:
+  - id: fingrounded-sql-string-formatting
+    languages: [python]
+    severity: WARNING
+    message: >
+      문자열 포매팅으로 조립한 SQL이 execute()에 전달되었습니다.
+      외부 입력값은 파라미터 바인딩으로 전달하세요.
+    metadata:
+      category: security
+      cwe: "CWE-89: SQL Injection"
+      owasp: "A03:2021 - Injection"
+      references:
+        - https://owasp.org/Top10/A03_2021-Injection/
+    patterns:
+      - pattern-either:
+          # (a) 인라인: execute()에 포매팅 문자열 직접 전달
+          - pattern: $CUR.execute(f"...", ...)
+          - pattern: $CUR.execute(f"...")
+          - pattern: $CUR.execute("..." % ...)
+          - pattern: $CUR.execute("...".format(...))
+          # (b) 변수 경유: 포매팅 문자열을 변수에 담아 execute()에 전달
+          - pattern: |
+              $SQL = f"..."
+              ...
+              $CUR.execute($SQL, ...)
+          - pattern: |
+              $SQL = f"..."
+              ...
+              $CUR.execute($SQL)
+
+  - id: fingrounded-hardcoded-secret-assignment
+    languages: [python]
+    severity: ERROR
+    message: >
+      코드에 시크릿(API 키/비밀번호/토큰)이 하드코딩된 것으로 보입니다.
+      환경변수(os.environ) 또는 .env 로드로 분리하세요.
+    metadata:
+      category: security
+      cwe: "CWE-798: Use of Hard-coded Credentials"
+      owasp: "A07:2021 - Identification and Authentication Failures"
+    patterns:
+      - pattern-regex: (?i)(api_key|apikey|password|passwd|secret|token)\s*=\s*["'][A-Za-z0-9_\-]{16,}["']
