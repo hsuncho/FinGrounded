@@ -3,7 +3,8 @@ from __future__ import annotations
 
 import io
 import zipfile
-import xml.etree.ElementTree as ET
+# (Semgrep python.lang.security.use-defused-xml 탐지 조치, SECURITY.md §1 사례 2)
+import defusedxml.ElementTree as ET
 
 import requests
 

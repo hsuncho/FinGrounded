@@ -8,3 +8,4 @@ openpyxl>=3.1                # XLSX 파싱
 numpy>=1.26
 anthropic>=0.40              # 도구호출 Agent LLM
 pytest>=8.0                  # 평가 단위 테스트 + 회귀 게이트
+defusedxml>=0.7
