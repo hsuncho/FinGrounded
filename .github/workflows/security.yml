@@ -1,6 +1,9 @@
 name: security
 # CI/CD 보안 점검 자동화: SAST(Semgrep) + SCA(pip-audit) + 시크릿 탐지(gitleaks)
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch: 
 
 permissions:
   contents: read
