@@ -129,22 +129,23 @@ Agent(Claude)로 골든셋 20문항을 실행한 결과입니다.
 
 ```text
 FinGrounded/
-├── config.py               # 대상 기업·연도·거시 시계열 정의
-├── ingest/                 # OpenDART·FRED 클라이언트, DB 헬퍼
-├── ingest_dart.py          # 재무제표 수집·적재
-├── ingest_fred.py          # 거시 시계열 수집·적재
-├── ingest_docs.py          # 문서 생성·파싱 → 청킹 → 임베딩 → 적재
-├── parsers/                # 확장자별 파서 라우터 (PDF, XLSX)
-├── chunk.py                # 청킹
-├── embeddings.py           # 임베딩 모델 래퍼 (교체 가능)
-├── retriever.py            # pgvector 검색
-├── tools.py                # Agent 도구 + 도구 스키마
-├── llm.py                  # LLM 클라이언트
-├── agent.py                # 도구호출 루프 + 구조화 출력
-├── evals/                  # 골든셋, 스코어러, 평가 러너, 임베딩 비교
-├── tests/                  # 단위 테스트, 회귀 게이트
-├── sql/schema.sql          # 테이블·pgvector 스키마
-├── .semgrep/rules.yml      # 커스텀 SAST 룰
+├── backend/
+│   ├── config.py               # 대상 기업·연도·거시 시계열 정의
+│   ├── ingest/                 # OpenDART·FRED 클라이언트, DB 헬퍼
+│   ├── ingest_dart.py          # 재무제표 수집·적재
+│   ├── ingest_fred.py          # 거시 시계열 수집·적재
+│   ├── ingest_docs.py          # 문서 생성·파싱 → 청킹 → 임베딩 → 적재
+│   ├── parsers/                # 확장자별 파서 라우터 (PDF, XLSX)
+│   ├── chunk.py                # 청킹
+│   ├── embeddings.py           # 임베딩 모델 래퍼 (교체 가능)
+│   ├── retriever.py            # pgvector 검색
+│   ├── tools.py                # Agent 도구 + 도구 스키마
+│   ├── llm.py                  # LLM 클라이언트
+│   ├── agent.py                # 도구호출 루프 + 구조화 출력
+│   ├── evals/                  # 골든셋, 스코어러, 평가 러너, 임베딩 비교
+│   ├── tests/                  # 단위 테스트, 회귀 게이트
+│   ├── sql/schema.sql          # 테이블·pgvector 스키마
+│   └── .semgrep/rules.yml      # 커스텀 SAST 룰
 ├── .github/workflows/      # ci.yml (테스트), security.yml (보안 점검)
 └── SECURITY.md             # 보안 점검 결과·조치 기록
 ```
@@ -166,6 +167,7 @@ FinGrounded/
 
 ### 2. 설치
 ```bash
+cd backend                       
 python -m venv .venv
 source .venv/bin/activate        # Windows(Git Bash): source .venv/Scripts/activate
 pip install -r requirements.txt

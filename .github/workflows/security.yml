@@ -18,9 +18,9 @@ jobs:
         run: |
           pip install semgrep
           # p/python, p/security-audit: 공개 룰셋 / .semgrep: 프로젝트 커스텀 룰
-          semgrep --config p/python --config p/security-audit --config .semgrep \
+          semgrep --config p/python --config p/security-audit --config backend/.semgrep \
                   --error --sarif --output semgrep.sarif || true
-          semgrep --config p/python --config p/security-audit --config .semgrep .
+          semgrep --config p/python --config p/security-audit --config backend/.semgrep .
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -39,7 +39,7 @@ jobs:
         run: |
           pip install pip-audit
           # 알려진 CVE가 있는 패키지 탐지. 결과는 SECURITY.md에 기록·조치
-          pip-audit -r requirements.txt || true
+          pip-audit -r backend/requirements.txt || true
 
   secrets:
     name: Secret Scan (gitleaks)

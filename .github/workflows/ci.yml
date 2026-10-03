@@ -5,6 +5,9 @@ jobs:
   unit-tests:
     # 평가 스코어러 단위 테스트를 매 푸시마다 실행
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
