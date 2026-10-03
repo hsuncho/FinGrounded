@@ -57,6 +57,8 @@ class Agent:
     def run(self, question: str) -> dict:
         messages = [{"role": "user", "content": question}]
         collected_sources, tool_log = [], []
+        # 도구가 결정적으로 계산한 수치. 화면에서 LLM 문장과 분리해 계산식과 함께 표시한다.
+        computed = []
 
         for _ in range(MAX_STEPS):
             resp = self.llm.create(system=SYSTEM, messages=messages, tools=tools.TOOL_DEFS)
@@ -68,6 +70,7 @@ class Agent:
                 answer = _parse_json(text)
                 answer["sources"] = _dedup_sources(collected_sources)
                 answer["tool_calls"] = tool_log
+                answer["computed"] = computed
                 return answer
 
             results = []
@@ -75,6 +78,8 @@ class Agent:
                 out = self._dispatch(tu.name, dict(tu.input))
                 tool_log.append({"name": tu.name, "args": dict(tu.input), "ok": out.get("ok")})
                 collected_sources.extend(out.get("sources", []))
+                if tu.name == "calculate_financial_ratio" and out.get("ok"):
+                    computed.append(out["result"])
                 results.append({
                     "type": "tool_result",
                     "tool_use_id": tu.id,
@@ -88,4 +93,5 @@ class Agent:
             "caveats": "",
             "sources": _dedup_sources(collected_sources),
             "tool_calls": tool_log,
+            "computed": computed,
         }

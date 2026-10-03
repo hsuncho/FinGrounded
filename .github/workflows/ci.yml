@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install pytest
-      - run: pytest tests/test_evaluators.py -q
+      - run: pip install pytest fastapi httpx
+      - run: pytest tests/test_evaluators.py tests/test_agent_computed.py tests/api -q
 
   # 통합 회귀 게이트(tests/test_regression.py)는 수동 워크플로에서 실행
