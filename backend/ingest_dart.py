@@ -28,11 +28,14 @@ def parse_amount(raw) -> int | None:
             return None
 
 
-def source_url(corp_code: str, year: str, reprt: str, fs_div: str) -> str:
-    return (
-        "https://opendart.fss.or.kr/api/fnlttSinglAcntAll.json"
-        f"?corp_code={corp_code}&bsns_year={year}&reprt_code={reprt}&fs_div={fs_div}"
-    )
+DART_VIEWER_URL = "https://dart.fss.or.kr/dsaf001/main.do?rcpNo={rcept_no}"
+
+
+def source_url(rcept_no) -> str | None:
+    rcept_no = str(rcept_no or "").strip()
+    if len(rcept_no) != 14 or not rcept_no.isdigit():
+        return None
+    return DART_VIEWER_URL.format(rcept_no=rcept_no)
 
 
 # financial_facts UNIQUE 제약(및 ON CONFLICT 타겟)과 동일한 키 인덱스
@@ -141,7 +144,6 @@ def main() -> None:
             if not rows:
                 print(f"  - {c.name} {year}: 데이터 없음")
                 continue
-            src = source_url(corp_code, year, REPRT_CODE, FS_DIV)
             records = [
                 (
                     corp_code, year, REPRT_CODE, FS_DIV,
@@ -152,7 +154,7 @@ def main() -> None:
                     parse_amount(r.get("frmtrm_amount")),
                     r.get("currency"),
                     int(r["ord"]) if str(r.get("ord", "")).strip().isdigit() else None,
-                    src,
+                    source_url(r.get("rcept_no")),
                 )
                 for r in rows
             ]

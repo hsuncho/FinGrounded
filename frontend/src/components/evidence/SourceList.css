@@ -1,0 +1,34 @@
+.sources {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: var(--step--1);
+}
+
+.sources__item + .sources__item {
+  margin-top: var(--space-3);
+}
+
+.sources__item::marker {
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.sources__title {
+  display: block;
+  font-weight: 500;
+}
+
+.sources__locator {
+  display: block;
+  color: var(--ink-muted);
+}
+
+.sources__link {
+  display: inline-block;
+  margin-top: var(--space-1);
+}
+
+.sources__empty {
+  font-size: var(--step--1);
+  color: var(--ink-muted);
+}

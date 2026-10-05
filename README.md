@@ -51,7 +51,7 @@ A. 삼성전자의 2023년 부채비율은 25.36%입니다.
 ### 1. 데이터 수집 파이프라인
 - **OpenDART**: 대상 기업의 연결 재무제표 전체 계정(`fnlttSinglAcntAll`)을 수집합니다. 기업 고유번호는 하드코딩하지 않고 `corpCode.xml`에서 종목코드로 매핑합니다.
 - **FRED**: 미국 CPI, 기준금리, 실업률, 10년물 국채금리, 원/달러 환율을 수집합니다.
-- 모든 재무 데이터에 출처 API URL을 함께 저장합니다.
+- 모든 재무 데이터에 공시 원문(DART 뷰어) 주소를 함께 저장합니다.
 - 대상: 삼성전자, SK하이닉스, NAVER, 카카오, 현대차 (2022~2024 사업보고서)
 
 ### 2. 문서 파싱 + RAG 검색
@@ -119,8 +119,10 @@ Agent(Claude)로 골든셋 20문항을 실행한 결과입니다.
 | 데이터베이스 | PostgreSQL 16 + pgvector |
 | 임베딩 | KURE-v1 (sentence-transformers) |
 | LLM | Claude (Anthropic API, 도구 호출) |
+| API 서버 | FastAPI, Pydantic |
+| 프론트엔드 | React, TypeScript, Vite |
 | 문서 파싱 | PyMuPDF, openpyxl |
-| 테스트·CI | pytest, GitHub Actions |
+| 테스트·CI | pytest, Vitest, Testing Library, GitHub Actions |
 | 보안 점검 | Semgrep, pip-audit, gitleaks, defusedxml |
 
 ---
@@ -142,10 +144,16 @@ FinGrounded/
 │   ├── tools.py                # Agent 도구 + 도구 스키마
 │   ├── llm.py                  # LLM 클라이언트
 │   ├── agent.py                # 도구호출 루프 + 구조화 출력
+│   ├── api/                    # FastAPI: /api/ask, /healthz, /readyz
 │   ├── evals/                  # 골든셋, 스코어러, 평가 러너, 임베딩 비교
 │   ├── tests/                  # 단위 테스트, 회귀 게이트
 │   ├── sql/schema.sql          # 테이블·pgvector 스키마
 │   └── .semgrep/rules.yml      # 커스텀 SAST 룰
+├── frontend/                   # React 화면: 답변·계산 내역·출처
+│   └── src/
+│       ├── api/                # /api/ask 호출, 오류 분류
+│       ├── hooks/useAsk.ts     # 질문·답변 상태 관리
+│       └── components/         # 입력, 답변, 계산표, 출처, 상태 표시
 ├── .github/workflows/      # ci.yml (테스트), security.yml (보안 점검)
 └── SECURITY.md             # 보안 점검 결과·조치 기록
 ```
@@ -197,12 +205,26 @@ python demo_retrieve.py  # 검색 데모: 질의 → 상위 청크 + 출처
 python demo_agent.py     # Agent 데모: 수치형·비교형·거부형 질문
 ```
 
+**웹 화면** (터미널 2개)
+```bash
+# 1) API 서버 (backend/)
+uvicorn api.main:app --port 8000   # /readyz 가 ready가 되면 준비 완료
+
+# 2) 프론트엔드 (frontend/, Node 20+)
+npm install
+npm run dev                        # http://localhost:5173 , /api 요청은 8000으로 프록시
+```
+
 ### 5. 평가·테스트
 ```bash
 python -m evals.run_eval            # 골든셋 평가 → evals/report.json
 python -m evals.compare_embeddings  # KURE vs BGE-m3 검색 비교
-pytest tests/test_evaluators.py     # 단위 테스트 (API·DB 불필요)
+pytest tests/test_evaluators.py tests/test_agent_computed.py tests/api   # 단위·API 테스트 (API 키·DB 불필요)
 pytest tests/test_regression.py     # 회귀 게이트 (API 키·DB 필요)
+
+# frontend/
+npm test
+npm run typecheck && npm run lint
 ```
 
 ### 6. 보안 점검 (로컬)

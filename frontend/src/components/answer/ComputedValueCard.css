@@ -1,0 +1,115 @@
+/* 감사조서 계산표: 가는 괘선, 합계 위 이중선, 대조 표시는 빨간 연필색 */
+.calc {
+  margin: 0;
+  padding: var(--space-4);
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--ledger);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.calc__caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.calc__heading {
+  font-weight: 600;
+}
+
+.calc__provenance {
+  font-size: var(--step--1);
+  color: var(--ledger);
+}
+
+.calc__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.calc__table th,
+.calc__table td {
+  padding: var(--space-1) 0;
+  vertical-align: baseline;
+}
+
+.calc__table th {
+  text-align: left;
+  font-weight: 400;
+}
+
+.calc__op {
+  width: 1.5rem;
+  color: var(--ink-muted);
+}
+
+.calc__amount,
+.calc__result {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.calc__mark {
+  width: 1.75rem;
+  text-align: right;
+}
+
+.calc__tick {
+  color: var(--pencil);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+a.calc__tick:hover {
+  text-decoration: underline;
+}
+
+.calc__table tfoot th,
+.calc__table tfoot td {
+  padding-top: var(--space-2);
+  border-top: 3px double var(--rule-strong);
+}
+
+.calc__table tfoot th {
+  font-weight: 600;
+}
+
+.calc__result {
+  color: var(--ledger);
+  font-size: var(--step-2);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.calc__unit {
+  margin-left: 0.15em;
+  font-size: var(--step-0);
+}
+
+.calc__table th {
+  white-space: nowrap;
+  padding-right: var(--space-2);
+}
+
+/* 아주 좁은 화면(320px 등): 금액이 계정명을 밀어내지 않도록 글자와 여백을 줄인다 */
+@media (max-width: 24rem) {
+  .calc {
+    padding: var(--space-3);
+  }
+
+  .calc__table {
+    font-size: var(--step--1);
+  }
+
+  .calc__op {
+    width: 1.1rem;
+  }
+
+  .calc__mark {
+    width: 1.25rem;
+  }
+}
